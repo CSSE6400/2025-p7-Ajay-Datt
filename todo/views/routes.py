@@ -95,6 +95,14 @@ def delete_todo(todo_id):
     db.session.commit()
     return jsonify(todo.to_dict()), 200
 
+@api.route('/test-celery', methods=['GET'])
+def test_celery():
+    """Trigger a simple test task"""
+    task = ical.test_task.delay()
+    return jsonify({
+        'task_id': task.id,
+        'task_status_url': f'{request.host_url}api/v1/todos/ical/{task.id}/status'
+    }), 202
 
 # ---------- CELERY ICAL TASK ENDPOINTS ----------
 
