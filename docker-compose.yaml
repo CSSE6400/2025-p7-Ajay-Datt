@@ -23,18 +23,18 @@ services:
     depends_on:
       - database
 
-redis:
-  image: redis:latest
-  restart: always
-  ports:
-    - "6379:6379"
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
 
-worker:
-  build:
-    context: .
-    dockerfile: Dockerfile.dev
-  restart: always
-  environment:
-    CELERY_BROKER_URL: redis://redis:6379
-    CELERY_RESULT_BACKEND: redis://redis:6379
-  command: poetry run celery --app todo.tasks.ical worker --loglevel=info
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: always
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379
+      CELERY_RESULT_BACKEND: redis://redis:6379
+    command: poetry run celery --app todo.tasks.ical worker --loglevel=info
