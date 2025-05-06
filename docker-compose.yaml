@@ -9,6 +9,12 @@ services:
       POSTGRES_USER: administrator
       POSTGRES_DB: todo
 
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
   app:
     build:
       context: .
@@ -16,27 +22,21 @@ services:
     restart: always
     volumes:
       - ./todo:/app/todo
+      - ./credentials:/root/.aws/credentials
+    env_file: "aws.env"
     environment:
-      SQLALCHEMY_DATABASE_URI: postgresql://administrator:verySecretPassword@database:5432/todo
-      CELERY_BROKER_URL: redis://redis:6379
-      CELERY_RESULT_BACKEND: redis://redis:6379
+      CELERY_BROKER_URL: sqs://
     ports:
       - "6400:6400"
     depends_on:
       - database
-
-  redis:
-    image: redis:latest
-    restart: always
-    ports:
-      - "6379:6379"
 
   worker:
     build:
       context: .
       dockerfile: Dockerfile.dev
     restart: always
+    env_file: "aws.env"
     environment:
-      CELERY_BROKER_URL: redis://redis:6379
-      CELERY_RESULT_BACKEND: redis://redis:6379
+      CELERY_BROKER_URL: sqs://
     command: poetry run celery --app todo.tasks.ical worker --loglevel=info

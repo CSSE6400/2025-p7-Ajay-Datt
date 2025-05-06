@@ -6,14 +6,14 @@ authors = ["Brae Webb", "Evan Hughes"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = "^3.8"
 flask = "^3.0.2"
 flask-sqlalchemy = "^3.1.1"
-psycopg2 = "^2.9.9"
+psycopg2-binary = "^2.9.9"
 gunicorn = "*"
-celery = {extras = ["sqs"], version = "^5.5.2"}
-redis = "^6.0.0"
-boto3 = "^1.38.9"
+celery = {extras = ["sqs"], version = "^5.5.1"}
+redis = "^5.2.1"
+boto3 = "^1.37.37"
 icalendar = "^6.1.3"
 
 
